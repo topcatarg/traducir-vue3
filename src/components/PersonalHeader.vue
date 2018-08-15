@@ -21,6 +21,7 @@
 
 <script lang="ts">
 // import IConfig from '@/models/Config.ts';
+import store from '@/store';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -33,6 +34,10 @@ const AppProps = Vue.extend({
 
 @Component
 export default class PersonalHeader extends AppProps {
-
+  public async mounted(): Promise<void> {
+    store.dispatch('me');
+    store.dispatch('config');
+    store.dispatch('stats');
+  }
 }
 </script>
