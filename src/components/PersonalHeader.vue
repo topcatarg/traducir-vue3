@@ -3,7 +3,11 @@
   <div>
     <b-navbar toggleable="md" type="dark" variant="info">
       <b-navbar-toggle target="nav_collapse"/>
-      <b-navbar-brand to="/" exact>Translations 🦄 </b-navbar-brand>
+      <b-navbar-brand to="/" exact>
+      {{Config.friendlyName}} 
+      Translations 🦄 
+      {{UserName}}
+      </b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
@@ -21,6 +25,8 @@
 
 <script lang="ts">
 // import IConfig from '@/models/Config.ts';
+import IConfig from '@/models/Config';
+import IuserInfo from '@/models/UserInfo';
 import store from '@/store';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -38,6 +44,18 @@ export default class PersonalHeader extends AppProps {
     store.dispatch('me');
     store.dispatch('config');
     store.dispatch('stats');
+  }
+  get Config(): IConfig {
+    return this.$store.getters.GetConfig;
+  }
+  get User(): IuserInfo {
+    return this.$store.getters.GetUser;
+  }
+  get UserName(): string {
+      if (this.User === undefined) {
+        return 'nadie';
+      }
+      return this.User.name;
   }
 }
 </script>

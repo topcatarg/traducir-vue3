@@ -48,5 +48,16 @@ export default new Vuex.Store({
             .then(response => context.commit('SetStats', response.data))
             .catch(error => context.commit('SetStats', undefined));
     }
+  },
+  getters: {
+    GetConfig: state => {
+      return state.Config;
+    },
+    GetUser: state => {
+      return state.userData;
+    },
+    GetStats: state => {
+      return state.stats;
+    }
   }
 });
