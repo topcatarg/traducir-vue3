@@ -4,9 +4,12 @@
     <b-navbar toggleable="md" type="dark" variant="info">
       <b-navbar-toggle target="nav_collapse"/>
       <b-navbar-brand to="/" exact>
-      {{Config.friendlyName}} 
-      Translations 🦄 
-      {{UserName}}
+      {{ConfigFriendlyName}} 
+      Translations 🦄
+      <span v-if="this.UserLogedin">
+        {{UserName}}
+        ({{UserType}})
+      </span>
       </b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
         <!-- Right aligned nav items -->
@@ -15,7 +18,8 @@
           <b-nav-item href="https://github.com/topcatarg/traducir-vue3" target="_blank">This source code</b-nav-item>
           <b-nav-item to="/Users">Users</b-nav-item>
           <b-nav-item to="/Suggestions">My suggestions</b-nav-item>
-          <b-nav-item to="/" exact>Login!</b-nav-item>
+          <b-nav-item :href="home + 'login?returnUrl=' + location" v-if="!this.UserLogedin">Log in!</b-nav-item>
+          <b-nav-item :href="home + 'logout?returnUrl=' + location" v-if="this.UserLogedin">Log out</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
       </b-navbar>
@@ -40,22 +44,31 @@ const AppProps = Vue.extend({
 
 @Component
 export default class PersonalHeader extends AppProps {
-  public async mounted(): Promise<void> {
+
+  private location: string = location.href;
+  private home?: string = process.env.VUE_APP_BASE_URI;
+
+  public mounted(): void {
     store.dispatch('me');
     store.dispatch('config');
     store.dispatch('stats');
   }
-  get Config(): IConfig {
-    return this.$store.getters.GetConfig;
-  }
-  get User(): IuserInfo {
-    return this.$store.getters.GetUser;
+
+  get ConfigFriendlyName(): string {
+    return this.$store.getters.GetConfigfriendlyName;
   }
   get UserName(): string {
-      if (this.User === undefined) {
-        return 'nadie';
-      }
-      return this.User.name;
+    return this.$store.getters.GetUserName;
+  }
+  get UserLogedin(): boolean {
+    return this.$store.getters.GetUserLogedin;
+  }
+  get UserType(): string {
+    return this.$store.getters.GetUserType;
+  }
+  private Login(): void {
+    const returnUrl = encodeURIComponent(location.pathname + location.search);
+    axios.get(process.env.VUE_APP_BASE_URI + '/app/login');
   }
 }
 </script>

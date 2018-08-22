@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import IConfig from './models/Config';
 import IStats from './models/Stats';
 import IuserInfo from './models/UserInfo';
+import { userTypeToString } from './models/UserType';
 
 Vue.use(Vuex);
 
@@ -14,7 +15,9 @@ export interface State {
 }
 
 export const OriginalState: State = {
-  Config: undefined
+  Config: undefined,
+  userData: undefined,
+  stats: undefined
 };
 
 export default new Vuex.Store({
@@ -32,19 +35,19 @@ export default new Vuex.Store({
   },
   actions: {
     me(context) {
-      Axios.post<IuserInfo>(process.env.VUE_APP_BASE_URI + 'me', { }, {withCredentials: true})
+      Axios.post<IuserInfo>(process.env.VUE_APP_API_URI + 'me', { }, {withCredentials: true})
       .then(data => {
         context.commit('SetUser', data.data);
       })
       .catch(error => context.commit('SetUser', undefined));
     },
     config(context) {
-      Axios.get<IConfig>(process.env.VUE_APP_BASE_URI + 'config')
+      Axios.get<IConfig>(process.env.VUE_APP_API_URI + 'config')
       .then(response => context.commit('SetConfig', response.data))
       .catch(error => context.commit('SetConfig', undefined));
     },
     stats(context) {
-      Axios.get<IStats>(process.env.VUE_APP_BASE_URI + 'strings/stats')
+      Axios.get<IStats>(process.env.VUE_APP_API_URI + 'strings/stats')
             .then(response => context.commit('SetStats', response.data))
             .catch(error => context.commit('SetStats', undefined));
     }
@@ -58,6 +61,26 @@ export default new Vuex.Store({
     },
     GetStats: state => {
       return state.stats;
+    },
+    GetConfigfriendlyName: state => {
+      if (state.Config !== undefined) {
+        return state.Config.friendlyName;
+      }
+      return '';
+    },
+    GetUserName: state => {
+      if (state.userData !== undefined) {
+        return state.userData.name;
+      }
+      return '';
+    },
+    GetUserLogedin: state => {
+        return state.userData !== undefined;
+    },
+    GetUserType: state => {
+      return state.userData !== undefined ?
+      userTypeToString(state.userData.userType) :
+      '';
     }
   }
 });
