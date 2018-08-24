@@ -36,8 +36,9 @@
 
 <script lang="ts">
 import store from '@/store';
-import Vue from 'vue';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
+@Component
 export default class StatComponent extends Vue {
     get GetStatstotalStrings(): number {
         return this.$store.getters.GetStatstotalStrings;
