@@ -81,6 +81,31 @@ export default new Vuex.Store({
       return state.userData !== undefined ?
       userTypeToString(state.userData.userType) :
       '';
+    },
+    GetStatstotalStrings: state => {
+      return state.stats !== undefined ?
+      state.stats.totalStrings :
+      0;
+    },
+    GetStatsurgentStrings: state => {
+      return state.stats !== undefined ?
+      state.stats.urgentStrings :
+      0;
+    },
+    GetStatswaitingApproval: state => {
+      return state.stats !== undefined ?
+      state.stats.waitingApproval :
+      0;
+    },
+    GetStatswithoutTranslation: state => {
+      return state.stats !== undefined ?
+      state.stats.withoutTranslation :
+      0;
+    },
+    GetStatswaitingReview : state => {
+      return state.stats !== undefined ?
+      state.stats.waitingReview :
+      0;
     }
   }
 });
