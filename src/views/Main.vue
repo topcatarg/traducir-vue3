@@ -1,11 +1,19 @@
 <template>
   <div>
       Main 
+      <StatComponent />
   </div>
+  
 </template>
 <script lang="ts">
-import Vue from 'vue';
-export default Vue.extend({
-  name: 'main'
-});
+import StatComponent from '@/components/Stats.vue';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+
+@Component({
+  components: {
+    StatComponent
+  }
+})
+export default class Main extends Vue {
+}
 </script>
