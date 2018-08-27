@@ -2,7 +2,7 @@
   <div>
       <Filters class="mt-2"/>
       
-      <StatComponent />
+      <StatComponent class="mt-4"/>
   </div>
 </template>
 <script lang="ts">
