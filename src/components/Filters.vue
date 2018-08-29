@@ -12,7 +12,7 @@
                             class="mb-3" 
                             type="text"
                             placeholder="^question"
-                            v-model="SourceRegEx"
+                            :value="SourceRegEx"
                         />
                     </b-col>
                     <b-col>
@@ -69,24 +69,31 @@
 </template>
 
 <script lang="ts">
+import { PushStatus } from '@/Helpers/Enums/PushStatus';
 import store from '@/store';
+import * as _ from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { SuggestionsStatus } from '../Helpers/Enums/SuggestionsStatus';
 import { TranslationStatus } from '../Helpers/Enums/TranslationStatus';
 import { UrgencyStatus } from '../Helpers/Enums/UrgencyStatus';
-import * as _ from "lodash";
+import QueryViewModel from '../models/QueryViewModel';
 
 @Component
 export default class Filters extends Vue {
-    private SourceRegEx: string = '';
-    private TranslationRegex: string = '';
-    private Key: string = '';
-    private TranslationStatusValue: TranslationStatus = TranslationStatus['Any String'];
+
+    private SourceRegEx: string;
+    private TranslationRegex: string;
+    private Key: string;
+    private TranslationStatusValue: TranslationStatus;
     private TranslationStatusOptions: object[] = [];
-    private SuggestionsStatusValue: SuggestionsStatus = SuggestionsStatus['Any string'];
+    private SuggestionsStatusValue: SuggestionsStatus;
     private SuggestionsStatusOptions: object[] = [];
-    private UrgencyStatusValue: UrgencyStatus = UrgencyStatus['Any string'];
+    private UrgencyStatusValue: UrgencyStatus;
     private UrgencyStatusOptions: object[] = [];
+
+    private submitForm: (() => void) & _.Cancelable = _.debounce(
+        this.GetData, 1000
+    );
 
     constructor() {
         super();
@@ -111,6 +118,30 @@ export default class Filters extends Vue {
                 text: UrgencyStatus[index]
             });
         }
+        this.SourceRegEx = this.QueryViewModel.SourceRegex;
+        this.TranslationRegex = this.QueryViewModel.TranslationRegex;
+        this.Key = this.QueryViewModel.Key;
+        this.TranslationStatusValue = this.QueryViewModel.TranslationStatus;
+        this.SuggestionsStatusValue = this.QueryViewModel.SuggestionsStatus;
+        this.UrgencyStatusValue = this.QueryViewModel.UrgencyStatus;
+    }
+
+    private GetData(): void {
+        const v: QueryViewModel = {
+            SourceRegex: this.SourceRegEx,
+            TranslationRegex: this.TranslationRegex,
+            Key: this.Key,
+            TranslationStatus: this.TranslationStatusValue,
+            SuggestionsStatus: this.SuggestionsStatusValue,
+            UrgencyStatus: this.UrgencyStatusValue,
+            PushStatus: 0,
+            IgnoredStatus: 0
+        };
+        this.$store.dispatch('SetQueryViewModel', v);
+    }
+
+    private get QueryViewModel(): QueryViewModel {
+        return this.$store.getters.GetQueryViewModel;
     }
 
     private ResetForm() {
@@ -122,8 +153,5 @@ export default class Filters extends Vue {
         this.UrgencyStatusValue = UrgencyStatus['Any string'];
     }
 
-    public submitForm: (() => Promise<void>) & _.Cancelable = _.debounce(async () => {
-        alert("cargando");
-    }, 1000);
 }
 </script>

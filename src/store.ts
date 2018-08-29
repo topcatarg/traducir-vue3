@@ -2,6 +2,7 @@ import Axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import IConfig from './models/Config';
+import QueryViewModel from './models/QueryViewModel';
 import IStats from './models/Stats';
 import IuserInfo from './models/UserInfo';
 import { userTypeToString } from './models/UserType';
@@ -12,12 +13,23 @@ export interface State {
   Config?: IConfig|undefined;
   userData?: IuserInfo;
   stats?: IStats;
+  QueryViewModel: QueryViewModel;
 }
 
 export const OriginalState: State = {
   Config: undefined,
   userData: undefined,
-  stats: undefined
+  stats: undefined,
+  QueryViewModel: {
+    SourceRegex: '',
+    TranslationRegex: '',
+    Key: '',
+    TranslationStatus: 0,
+    SuggestionsStatus: 0,
+    PushStatus: 0,
+    UrgencyStatus: 0,
+    IgnoredStatus: 0
+  }
 };
 
 export default new Vuex.Store({
@@ -31,6 +43,9 @@ export default new Vuex.Store({
     },
     SetStats(state, newstate: IStats) {
       state.stats = newstate;
+    },
+    SetQueryViewModel(state, newstate: QueryViewModel) {
+      state.QueryViewModel = newstate;
     }
   },
   actions: {
@@ -50,6 +65,9 @@ export default new Vuex.Store({
       Axios.get<IStats>(process.env.VUE_APP_API_URI + 'strings/stats')
             .then(response => context.commit('SetStats', response.data))
             .catch(error => context.commit('SetStats', undefined));
+    },
+    SetQueryViewModel(context, param: QueryViewModel) {
+      context.commit('SetQueryViewModel', param);
     }
   },
   getters: {
@@ -102,10 +120,13 @@ export default new Vuex.Store({
       state.stats.withoutTranslation :
       0;
     },
-    GetStatswaitingReview : state => {
+    GetStatswaitingReview: state => {
       return state.stats !== undefined ?
       state.stats.waitingReview :
       0;
+    },
+    GetQueryViewModel: state => {
+      return state.QueryViewModel;
     }
   }
 });
