@@ -1,3 +1,4 @@
+import ISOString from '@/models/ISOString';
 import Axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -14,6 +15,8 @@ export interface State {
   userData?: IuserInfo;
   stats?: IStats;
   QueryViewModel: QueryViewModel;
+  HasError: boolean;
+  SOStrings: ISOString[];
 }
 
 export const OriginalState: State = {
@@ -29,7 +32,9 @@ export const OriginalState: State = {
     PushStatus: 0,
     UrgencyStatus: 0,
     IgnoredStatus: 0
-  }
+  },
+  HasError: false,
+  SOStrings: []
 };
 
 export default new Vuex.Store({
@@ -46,6 +51,12 @@ export default new Vuex.Store({
     },
     SetQueryViewModel(state, newstate: QueryViewModel) {
       state.QueryViewModel = newstate;
+    },
+    SetSOStrings(state, newstate: ISOString[]) {
+      state.SOStrings = newstate;
+    },
+    SetHasError(state, newstate: boolean) {
+      state.HasError = newstate;
     }
   },
   actions: {
@@ -68,6 +79,12 @@ export default new Vuex.Store({
     },
     SetQueryViewModel(context, param: QueryViewModel) {
       context.commit('SetQueryViewModel', param);
+      Axios.post<ISOString[]>(process.env.VUE_APP_API_URI + 'strings/query',
+      context.state.QueryViewModel, {withCredentials: true})
+      .then(response => {
+        context.commit('SetSOStrings', response.data);
+        context.commit('SetHasError', false);
+      });
     }
   },
   getters: {

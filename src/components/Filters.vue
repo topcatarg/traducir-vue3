@@ -12,7 +12,7 @@
                             class="mb-3" 
                             type="text"
                             placeholder="^question"
-                            :value="SourceRegEx"
+                            v-model="SourceRegEx"
                         />
                     </b-col>
                     <b-col>
