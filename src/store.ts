@@ -6,7 +6,7 @@ import IConfig from './models/Config';
 import QueryViewModel from './models/QueryViewModel';
 import IStats from './models/Stats';
 import IuserInfo from './models/UserInfo';
-import { userTypeToString } from './models/UserType';
+import { UserType, userTypeToString } from './models/UserType';
 
 Vue.use(Vuex);
 
@@ -117,6 +117,11 @@ export default new Vuex.Store({
         userTypeToString(state.userData.userType) :
         '';
     },
+    GetTrustedUser: state => {
+      return state.userData !== undefined ?
+      state.userData.userType >= UserType.TrustedUser :
+      false;
+    },
     GetStatstotalStrings: state => {
       return state.stats !== undefined ?
         state.stats.totalStrings :
@@ -147,6 +152,9 @@ export default new Vuex.Store({
     },
     GetHasResults: state => {
       return state.SOStrings.length > 0;
+    },
+    GetSOStrings: state => {
+      return state.SOStrings;
     }
   }
 });
