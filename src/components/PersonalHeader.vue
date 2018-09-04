@@ -2,7 +2,7 @@
   
   <div>
     <b-navbar toggleable="md" type="dark" variant="info">
-      <b-navbar-toggle target="nav_collapse"/>
+      <b-navbar-toggle target="nav_collapse" class="container"/>
       <b-navbar-brand to="/" exact>
       {{ConfigFriendlyName}} 
       Translations 🦄

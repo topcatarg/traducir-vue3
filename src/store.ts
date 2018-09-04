@@ -6,12 +6,12 @@ import IConfig from './models/Config';
 import QueryViewModel from './models/QueryViewModel';
 import IStats from './models/Stats';
 import IuserInfo from './models/UserInfo';
-import { userTypeToString } from './models/UserType';
+import { UserType, userTypeToString } from './models/UserType';
 
 Vue.use(Vuex);
 
 export interface State {
-  Config?: IConfig|undefined;
+  Config?: IConfig | undefined;
   userData?: IuserInfo;
   stats?: IStats;
   QueryViewModel: QueryViewModel;
@@ -61,30 +61,30 @@ export default new Vuex.Store({
   },
   actions: {
     me(context) {
-      Axios.post<IuserInfo>(process.env.VUE_APP_API_URI + 'me', { }, {withCredentials: true})
-      .then(data => {
-        context.commit('SetUser', data.data);
-      })
-      .catch(error => context.commit('SetUser', undefined));
+      Axios.post<IuserInfo>(process.env.VUE_APP_API_URI + 'me', {}, { withCredentials: true })
+        .then(data => {
+          context.commit('SetUser', data.data);
+        })
+        .catch(error => context.commit('SetUser', undefined));
     },
     config(context) {
       Axios.get<IConfig>(process.env.VUE_APP_API_URI + 'config')
-      .then(response => context.commit('SetConfig', response.data))
-      .catch(error => context.commit('SetConfig', undefined));
+        .then(response => context.commit('SetConfig', response.data))
+        .catch(error => context.commit('SetConfig', undefined));
     },
     stats(context) {
       Axios.get<IStats>(process.env.VUE_APP_API_URI + 'strings/stats')
-            .then(response => context.commit('SetStats', response.data))
-            .catch(error => context.commit('SetStats', undefined));
+        .then(response => context.commit('SetStats', response.data))
+        .catch(error => context.commit('SetStats', undefined));
     },
     SetQueryViewModel(context, param: QueryViewModel) {
       context.commit('SetQueryViewModel', param);
       Axios.post<ISOString[]>(process.env.VUE_APP_API_URI + 'strings/query',
-      context.state.QueryViewModel, {withCredentials: true})
-      .then(response => {
-        context.commit('SetSOStrings', response.data);
-        context.commit('SetHasError', false);
-      });
+        context.state.QueryViewModel, { withCredentials: true })
+        .then(response => {
+          context.commit('SetSOStrings', response.data);
+          context.commit('SetHasError', false);
+        });
     }
   },
   getters: {
@@ -110,40 +110,51 @@ export default new Vuex.Store({
       return '';
     },
     GetUserLogedin: state => {
-        return state.userData !== undefined;
+      return state.userData !== undefined;
     },
     GetUserType: state => {
       return state.userData !== undefined ?
-      userTypeToString(state.userData.userType) :
-      '';
+        userTypeToString(state.userData.userType) :
+        '';
+    },
+    GetTrustedUser: state => {
+      return state.userData !== undefined ?
+      state.userData.userType >= UserType.TrustedUser :
+      false;
     },
     GetStatstotalStrings: state => {
       return state.stats !== undefined ?
-      state.stats.totalStrings :
-      0;
+        state.stats.totalStrings :
+        0;
     },
     GetStatsurgentStrings: state => {
       return state.stats !== undefined ?
-      state.stats.urgentStrings :
-      0;
+        state.stats.urgentStrings :
+        0;
     },
     GetStatswaitingApproval: state => {
       return state.stats !== undefined ?
-      state.stats.waitingApproval :
-      0;
+        state.stats.waitingApproval :
+        0;
     },
     GetStatswithoutTranslation: state => {
       return state.stats !== undefined ?
-      state.stats.withoutTranslation :
-      0;
+        state.stats.withoutTranslation :
+        0;
     },
     GetStatswaitingReview: state => {
       return state.stats !== undefined ?
-      state.stats.waitingReview :
-      0;
+        state.stats.waitingReview :
+        0;
     },
     GetQueryViewModel: state => {
       return state.QueryViewModel;
+    },
+    GetHasResults: state => {
+      return state.SOStrings.length > 0;
+    },
+    GetSOStrings: state => {
+      return state.SOStrings;
     }
   }
 });

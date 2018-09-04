@@ -4,61 +4,65 @@
             <h2>Filters</h2>
         </div>
         <b-form @submit="submitForm()" @input="submitForm()">
-            <b-container>
-                <b-row>
-                    <b-col class="">
+            <b-container >
+                <b-row class="text-left">
+                    <b-col >
                         Source Regex
                         <b-form-input 
-                            class="mb-3" 
+                            class="mb-3 mt-2" 
                             type="text"
                             placeholder="^question"
                             v-model="SourceRegEx"
                         />
                     </b-col>
-                    <b-col>
+                    <b-col > 
                         Translation Regex
                         <b-form-input 
+                            class="mb-3 mt-2"
                             type="text"
                             placeholder="(?i)pregunta$"
                             v-model="TranslationRegex"
-                            
                         />
                     </b-col>
-                </b-row>
-                <b-row>
+                </b-row >
+                <b-row class="text-left">
                     <b-col>
                         Strings without translation
-                        <b-form-select class="mb-3" 
+                        <b-form-select 
+                            class="mb-3 mt-2"
                             v-model="TranslationStatusValue" 
                             :options="TranslationStatusOptions">
                         </b-form-select>
                     </b-col>
                     <b-col>
                         Strings with pending suggestions
-                        <b-form-select class="mb-3" 
+                        <b-form-select 
+                            class="mb-3 mt-2"
                             v-model="SuggestionsStatusValue"
                             :options="SuggestionsStatusOptions"
                             />
                     </b-col>
                 </b-row>
-                <b-row>
+                <b-row class="text-left">
                     <b-col>
                         Key
                         <b-form-input 
+                            class="mb-3 mt-2"
                             type="text"
                             v-model="Key"
                         />
                     </b-col>
                     <b-col>
                         Strings with urgency status
-                        <b-form-select class="mb-3" 
+                        <b-form-select 
+                            class="mb-3 mt-2"
                             v-model="UrgencyStatusValue"
                             :options="UrgencyStatusOptions"/>
                     </b-col>
                 </b-row>
-                <b-row>
+                <b-row class="mb-3 mt-2 ">
                     <b-col>
-                        <b-button @click="ResetForm">
+                        <b-button @click="ResetForm" >
                             Reset
                         </b-button>
                     </b-col>
@@ -80,78 +84,78 @@ import QueryViewModel from '../models/QueryViewModel';
 
 @Component
 export default class Filters extends Vue {
+  private SourceRegEx: string;
+  private TranslationRegex: string;
+  private Key: string;
+  private TranslationStatusValue: TranslationStatus;
+  private TranslationStatusOptions: object[] = [];
+  private SuggestionsStatusValue: SuggestionsStatus;
+  private SuggestionsStatusOptions: object[] = [];
+  private UrgencyStatusValue: UrgencyStatus;
+  private UrgencyStatusOptions: object[] = [];
 
-    private SourceRegEx: string;
-    private TranslationRegex: string;
-    private Key: string;
-    private TranslationStatusValue: TranslationStatus;
-    private TranslationStatusOptions: object[] = [];
-    private SuggestionsStatusValue: SuggestionsStatus;
-    private SuggestionsStatusOptions: object[] = [];
-    private UrgencyStatusValue: UrgencyStatus;
-    private UrgencyStatusOptions: object[] = [];
+  private submitForm: (() => void) & _.Cancelable = _.debounce(
+    this.GetData,
+    1000
+  );
 
-    private submitForm: (() => void) & _.Cancelable = _.debounce(
-        this.GetData, 1000
-    );
-
-    constructor() {
-        super();
-        let len = Object.keys(TranslationStatus).length / 2;
-        for (let index = 0; index < len; index++) {
-            this.TranslationStatusOptions.push({
-                value: index,
-                text: TranslationStatus[index]
-            });
-        }
-        len = Object.keys(SuggestionsStatus).length / 2;
-        for (let index = 0; index < len; index++) {
-            this.SuggestionsStatusOptions.push({
-                value: index,
-                text: SuggestionsStatus[index]
-            });
-        }
-        len = Object.keys(UrgencyStatus).length / 2;
-        for (let index = 0; index < len; index++) {
-            this.UrgencyStatusOptions.push({
-                value: index,
-                text: UrgencyStatus[index]
-            });
-        }
-        this.SourceRegEx = this.QueryViewModel.SourceRegex;
-        this.TranslationRegex = this.QueryViewModel.TranslationRegex;
-        this.Key = this.QueryViewModel.Key;
-        this.TranslationStatusValue = this.QueryViewModel.TranslationStatus;
-        this.SuggestionsStatusValue = this.QueryViewModel.SuggestionsStatus;
-        this.UrgencyStatusValue = this.QueryViewModel.UrgencyStatus;
+  constructor() {
+    super();
+    let len = Object.keys(TranslationStatus).length / 2;
+    for (let index = 0; index < len; index++) {
+      this.TranslationStatusOptions.push({
+        value: index,
+        text: TranslationStatus[index]
+      });
     }
-
-    private GetData(): void {
-        const v: QueryViewModel = {
-            SourceRegex: this.SourceRegEx,
-            TranslationRegex: this.TranslationRegex,
-            Key: this.Key,
-            TranslationStatus: this.TranslationStatusValue,
-            SuggestionsStatus: this.SuggestionsStatusValue,
-            UrgencyStatus: this.UrgencyStatusValue,
-            PushStatus: 0,
-            IgnoredStatus: 0
-        };
-        this.$store.dispatch('SetQueryViewModel', v);
+    len = Object.keys(SuggestionsStatus).length / 2;
+    for (let index = 0; index < len; index++) {
+      this.SuggestionsStatusOptions.push({
+        value: index,
+        text: SuggestionsStatus[index]
+      });
     }
-
-    private get QueryViewModel(): QueryViewModel {
-        return this.$store.getters.GetQueryViewModel;
+    len = Object.keys(UrgencyStatus).length / 2;
+    for (let index = 0; index < len; index++) {
+      this.UrgencyStatusOptions.push({
+        value: index,
+        text: UrgencyStatus[index]
+      });
     }
+    this.SourceRegEx = this.QueryViewModel.SourceRegex;
+    this.TranslationRegex = this.QueryViewModel.TranslationRegex;
+    this.Key = this.QueryViewModel.Key;
+    this.TranslationStatusValue = this.QueryViewModel.TranslationStatus;
+    this.SuggestionsStatusValue = this.QueryViewModel.SuggestionsStatus;
+    this.UrgencyStatusValue = this.QueryViewModel.UrgencyStatus;
+  }
 
-    private ResetForm() {
-        this.SourceRegEx = '';
-        this.TranslationRegex = '';
-        this.Key = '';
-        this.TranslationStatusValue = TranslationStatus['Any String'];
-        this.SuggestionsStatusValue = SuggestionsStatus['Any string'];
-        this.UrgencyStatusValue = UrgencyStatus['Any string'];
-    }
+  private GetData(): void {
+    const v: QueryViewModel = {
+      SourceRegex: this.SourceRegEx,
+      TranslationRegex: this.TranslationRegex,
+      Key: this.Key,
+      TranslationStatus: this.TranslationStatusValue,
+      SuggestionsStatus: this.SuggestionsStatusValue,
+      UrgencyStatus: this.UrgencyStatusValue,
+      PushStatus: 0,
+      IgnoredStatus: 0
+    };
+    this.$store.dispatch('SetQueryViewModel', v);
+  }
 
+  private get QueryViewModel(): QueryViewModel {
+    return this.$store.getters.GetQueryViewModel;
+  }
+
+  private ResetForm() {
+    this.SourceRegEx = '';
+    this.TranslationRegex = '';
+    this.Key = '';
+    this.TranslationStatusValue = TranslationStatus['Any String'];
+    this.SuggestionsStatusValue = SuggestionsStatus['Any string'];
+    this.UrgencyStatusValue = UrgencyStatus['Any string'];
+    this.$store.commit('SetSOStrings', []);
+  }
 }
 </script>
