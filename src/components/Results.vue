@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <b-table striped hover :items="SOStrings" :fields="fields" 
-            class="mx-auto table-secondary">
+        <b-table hover :items="SOStrings" :fields="fields" 
+            class="mx-auto mytable">
             <template slot="HEAD_originalString" slot-scope="data">
                 <!-- A custom formatted header cell for field 'name' -->
                 <div class="text-left">String</div>
@@ -91,3 +91,8 @@ export default class Results extends Vue {
 }
 </script>
 
+<style>
+.mytable thead {
+    background: rgb(233,236,239);
+}
+</style>
