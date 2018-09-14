@@ -1,16 +1,40 @@
 <template>
   <div>
-      <Filters class="mt-2"/>
-      
-      <StatComponent class="mt-4" v-if="!this.WithResults" />
-
-      <Results class="mt-4" v-if="this.WithResults" />
+      <transition name="custom-results-transition"
+        enter-active-class="animated fadeInLeft"
+        leave-active-class="animated bounceOutLeft">
+        <Filters class="mt-2" v-if="this.searching"/>
+      </transition>
+      <transition name="custom-results-transition"
+          enter-active-class="animated fadeInRight"
+          leave-active-class="animated bounceOutRight">
+        <StatComponent key="stats" class="mt-4" v-if="!this.WithResults && this.searching" />
+      </transition>      
+      <transition name="custom-results-transition"
+        enter-active-class="animated fadeInLeft"
+        leave-active-class="animated bounceOutLeft">
+        <Results 
+            key="results" 
+            class="mt-4" 
+            v-if="this.WithResults && this.searching" 
+            @row-clicked="onRowPress"/>
+      </transition>
+      <transition name="custom-results-transition"
+        enter-active-class="animated fadeInRight"
+        leave-active-class="animated bounceOutRight">
+        <EditString 
+          v-if="!this.searching"
+          @back-editing="onEditingBack"/>
+      </transition>
+    
   </div>
 </template>
 <script lang="ts">
+import EditString from '@/components/EditString.vue';
 import Filters from '@/components/Filters.vue';
 import Results from '@/components/Results.vue';
 import StatComponent from '@/components/Stats.vue';
+
 import store from '@/store';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
@@ -18,12 +42,25 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
   components: {
     StatComponent,
     Filters,
-    Results
+    Results,
+    EditString
   }
 })
 export default class Main extends Vue {
+
+  private searching: boolean = true;
+
   private get WithResults(): boolean {
     return this.$store.getters.GetHasResults;
   }
+
+  private onRowPress(): void {
+    this.searching = false;
+  }
+
+  private onEditingBack(): void {
+    this.searching = true;
+  }
 }
 </script>
+
