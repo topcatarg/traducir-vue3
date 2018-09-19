@@ -1,6 +1,7 @@
 <template>
   <div>
-      suggestions
+      Suggestions
+      <hr/>
       <b-button />
   </div>
 </template>

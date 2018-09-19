@@ -38,7 +38,7 @@
                         Strings with pending suggestions
                         <b-form-select 
                             class="mb-3 mt-2"
-                            v-model="SuggestionsStatusValue"
+                            v-model="QueryViewModel.SuggestionsStatus"
                             :options="SuggestionsStatusOptions"
                             />
                     </b-col>

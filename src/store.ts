@@ -17,6 +17,7 @@ export interface State {
   QueryViewModel: QueryViewModel;
   HasError: boolean;
   SOStrings: ISOString[];
+  StringToEdit?: ISOString;
 }
 
 export const OriginalState: State = {
@@ -34,7 +35,8 @@ export const OriginalState: State = {
     IgnoredStatus: 0
   },
   HasError: false,
-  SOStrings: []
+  SOStrings: [],
+  StringToEdit: undefined
 };
 
 export default new Vuex.Store({
@@ -50,13 +52,16 @@ export default new Vuex.Store({
       state.stats = newstate;
     },
     SetQueryViewModel(state, newstate: QueryViewModel) {
-      state.QueryViewModel = newstate;
+      state.QueryViewModel = Object.assign({}, state.QueryViewModel, newstate);
     },
     SetSOStrings(state, newstate: ISOString[]) {
       state.SOStrings = newstate;
     },
     SetHasError(state, newstate: boolean) {
       state.HasError = newstate;
+    },
+    SetStringToEdit(state, newstate: ISOString) {
+      state.StringToEdit = newstate;
     }
   },
   actions: {
@@ -85,6 +90,10 @@ export default new Vuex.Store({
           context.commit('SetSOStrings', response.data);
           context.commit('SetHasError', false);
         });
+    },
+    async RefreshString(context, StringId: number) {
+      const r = await Axios.get<ISOString>(process.env.VUE_APP_API_URI + `strings/` + StringId);
+      // await this.updateStrings([r.data]);
     }
   },
   getters: {
@@ -155,6 +164,9 @@ export default new Vuex.Store({
     },
     GetSOStrings: state => {
       return state.SOStrings;
+    },
+    GetStringToEdit: state => {
+      return state.StringToEdit;
     }
   }
 });

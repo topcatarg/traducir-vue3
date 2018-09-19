@@ -90,7 +90,7 @@ export default class Results extends Vue {
 
     private onClickRow(item: ISOString): void {
         // Get this data to the store
-
+        this.$store.commit('SetStringToEdit', item);
         // emit to parent to change the control to show
         this.$emit('row-clicked');
     }
