@@ -27,7 +27,7 @@
                 Raw string?:
             </span>
             <b-form-checkbox id="checkbox1"
-                     v-model="this.GetStringToEdit.rawString"/>
+                v-model="VM.rawString"/>
         </div>
         <div class="text-left">
             <span class="font-weight-bold">
@@ -36,7 +36,7 @@
             {{this.GetStringToEdit.originalString}}
         </div>
         <div class="text-left">
-            <b-button variant="primary" size="sm">
+            <b-button variant="primary" size="sm" @click="VM.Suggestion = GetStringToEdit.originalString">
                 Copy as suggestion
             </b-button>
         </div>
@@ -52,7 +52,7 @@
             </span>
         </div>
         <div class="text-left">
-            <b-button variant="primary" size="sm">
+            <b-button variant="primary" size="sm" @click="VM.Suggestion = GetStringToEdit.translation">
                 Copy as suggestion
             </b-button>
         </div>
@@ -60,9 +60,9 @@
         <b-table :items="this.GetStringToEdit.suggestions" :fields="fields" 
             class="mx-auto mytableediting">
             <template slot="delete" slot-scope="data">
-                <b-button variant="danger" size="sm">
+                <b-button variant="danger" size="sm" v-if="GetUser.id === data.item.createdById" @click="DeleteReview(data.item.id)">
                     DELETE
-                    </b-button>
+                </b-button>
             </template>
             <template slot="votes" slot-scope="data">
                 <b-button variant="success">
@@ -76,15 +76,16 @@
         <div class="text-left font-weight-bold">
             New Suggestion
             <b-form-textarea id="textarea1"
-                     :rows="3"
-                     :max-rows="6">
+                v-model="VM.Suggestion"
+                :rows="3"
+                :max-rows="6">
             </b-form-textarea>
         </div>
         <div class="text-left mt-2">
-            <b-button variant="primary">
+            <b-button variant="primary" @click="SendTranslation(false)">
                 Send new suggestion
             </b-button>
-            <b-button variant="warning">
+            <b-button variant="warning" @click="SendTranslation(true)">
                 Send final translation
             </b-button>
             <br/>
@@ -98,14 +99,21 @@
 <script lang="ts">
 import ITableFields from '@/Helpers/Tables/ITableFields';
 import IConfig from '@/models/Config';
-import ISOString from '@/models/ISOString';
+import ISOStringToTranslate from '@/models/ISOStringToTranslate';
 import IuserInfo from '@/models/UserInfo';
+import EditingStringVM from '@/ViewModels/EditingStringVM';
 import Axios from 'axios';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class EditString extends Vue {
     private fields: ITableFields[] = [];
+    private VM: EditingStringVM =
+    {
+        RawString: false,
+        Suggestion: '',
+        Approve: false
+    };
 
     constructor() {
         super();
@@ -130,7 +138,8 @@ export default class EditString extends Vue {
             label: ''
         });
     }
-    private get GetStringToEdit(): ISOString {
+
+    private get GetStringToEdit(): ISOStringToTranslate {
         return this.$store.getters.GetStringToEdit;
     }
 
@@ -161,6 +170,24 @@ export default class EditString extends Vue {
         }
     }
 
+    private SendTranslation(approve: boolean): void {
+        this.VM.Approve = approve;
+        this.$store.dispatch('postSuggestion', this.VM);
+        this.$emit('back-editing');
+    }
+
+    private async DeleteReview(id: number): Promise<void> {
+        try {
+            await Axios.delete(process.env.VUE_APP_API_URI + 'suggestions/' + id, {withCredentials: true});
+            this.$store.dispatch('RefreshString', this.GetStringToEdit.id);
+        } catch (e) {
+            if (e.response.status === 400) {
+                //  this.props.showErrorMessage("Error deleting the suggestion. Do you have enough rights?");
+            } else {
+                // this.props.showErrorMessage(e.response.status);
+            }
+        }
+    }
 }
 </script>
 
