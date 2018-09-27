@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <b-table hover :items="SOStrings" :fields="fields" 
-            class="mx-auto mytable">
+            class="mx-auto mytable" @row-clicked="onClickRow">
             <template slot="HEAD_originalString" slot-scope="data">
                 <!-- A custom formatted header cell for field 'name' -->
                 <div class="text-left">String</div>
@@ -88,6 +88,12 @@ export default class Results extends Vue {
         return _.filter(suggestions, s => s.state === StringSuggestionState.Created).length;
     }
 
+    private onClickRow(item: ISOString): void {
+        // Get this data to the store
+        this.$store.commit('SetStringToEdit', item);
+        // emit to parent to change the control to show
+        this.$emit('row-clicked');
+    }
 }
 </script>
 

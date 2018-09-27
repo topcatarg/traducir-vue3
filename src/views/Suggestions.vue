@@ -1,13 +1,16 @@
 <template>
   <div>
-      suggestions
+      Suggestions
+      <hr/>
+      <b-button />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-export default Vue.extend({
-  name: 'suggestions'
-});
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+
+@Component
+export default class Suggestions extends Vue {
+}
 </script>
 

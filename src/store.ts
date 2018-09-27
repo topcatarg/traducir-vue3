@@ -1,5 +1,8 @@
 import ISOString from '@/models/ISOString';
+import ISOStringToTranslate, {SOStringToTranslate, SoStringToTranslateClass} from '@/models/ISOStringToTranslate';
+import EditingStringVM from '@/ViewModels/EditingStringVM';
 import Axios from 'axios';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import IConfig from './models/Config';
@@ -17,6 +20,7 @@ export interface State {
   QueryViewModel: QueryViewModel;
   HasError: boolean;
   SOStrings: ISOString[];
+  StringToEdit?: ISOString;
 }
 
 export const OriginalState: State = {
@@ -34,7 +38,8 @@ export const OriginalState: State = {
     IgnoredStatus: 0
   },
   HasError: false,
-  SOStrings: []
+  SOStrings: [],
+  StringToEdit: undefined
 };
 
 export default new Vuex.Store({
@@ -47,16 +52,21 @@ export default new Vuex.Store({
       state.Config = newstate;
     },
     SetStats(state, newstate: IStats) {
-      state.stats = newstate;
+      state.stats = Object.assign({}, newstate);
+      // state.stats = newstate;
     },
     SetQueryViewModel(state, newstate: QueryViewModel) {
-      state.QueryViewModel = newstate;
+      state.QueryViewModel = Object.assign({}, state.QueryViewModel, newstate);
     },
     SetSOStrings(state, newstate: ISOString[]) {
+      // state.SOStrings = Object.assign({}, newstate);
       state.SOStrings = newstate;
     },
     SetHasError(state, newstate: boolean) {
       state.HasError = newstate;
+    },
+    SetStringToEdit(state, newstate: ISOString) {
+      state.StringToEdit = Object.assign({}, newstate);
     }
   },
   actions: {
@@ -85,6 +95,40 @@ export default new Vuex.Store({
           context.commit('SetSOStrings', response.data);
           context.commit('SetHasError', false);
         });
+    },
+    async RefreshString(context, StringId: number) {
+      const r = await Axios.get<ISOString>(process.env.VUE_APP_API_URI + `strings/` + StringId);
+      await context.dispatch('updateStrings', [r.data]);
+    },
+    async updateStrings(context, strs: ISOString[]): Promise<void> {
+      const newStrings = context.state.SOStrings.slice();
+      for (const str of strs) {
+        const idx = _.findIndex(newStrings, s => s.id === str.id);
+        if (idx === -1) {
+            continue;
+        }
+        str.touched = true;
+        newStrings[idx] = str;
+      }
+      context.commit('SetStringToEdit', strs.length === 1 ? strs[0] : undefined);
+      context.commit('SetSOStrings', newStrings);
+      context.dispatch('stats');
+    },
+    async postSuggestion(context, data: EditingStringVM ): Promise<void> {
+      if (context.state.StringToEdit === undefined) {
+        return;
+      }
+      try {
+        await Axios.put(process.env.VUE_APP_API_URI + 'suggestions', {
+            Approve: data.Approve,
+            RawString: data.RawString,
+            StringId: context.state.StringToEdit.id,
+            Suggestion: data.Suggestion
+        }, { withCredentials: true });
+        context.dispatch('RefreshString', context.state.StringToEdit.id);
+      } catch (e) {
+        context.commit('SetHasError', true);
+      }
     }
   },
   getters: {
@@ -155,6 +199,9 @@ export default new Vuex.Store({
     },
     GetSOStrings: state => {
       return state.SOStrings;
+    },
+    GetStringToEdit: state => {
+      return state.StringToEdit;
     }
   }
 });

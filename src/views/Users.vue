@@ -4,8 +4,9 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
-export default Vue.extend({
-  name: 'users'
-});
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+
+@Component
+export default class Users extends Vue {
+}
 </script>
