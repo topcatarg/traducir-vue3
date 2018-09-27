@@ -65,10 +65,10 @@
                 </b-button>
             </template>
             <template slot="votes" slot-scope="data">
-                <b-button variant="success">
+                <b-button variant="success" @click="processReview(true,data.item.id)">
                     <i class="fa fa-thumbs-up"></i>
                 </b-button>
-                <b-button variant="danger">
+                <b-button variant="danger"  @click="processReview(false,data.item.id)">
                     <i class="fa fa-thumbs-down"></i>
                 </b-button>
             </template>
@@ -186,6 +186,29 @@ export default class EditString extends Vue {
             } else {
                 // this.props.showErrorMessage(e.response.status);
             }
+        }
+    }
+
+    private async processReview(action: boolean, id: number): Promise<void> {
+        /* this.setState({
+            isButtonDisabled: true
+        });*/
+        try {
+            await Axios.put(process.env.VUE_APP_API_URI + 'review', {
+                Approve: action,
+                SuggestionId: id
+            }, {withCredentials: true});
+            this.$store.dispatch('RefreshString', this.GetStringToEdit.id);
+            // history.push("/filters");
+        } catch (e) {
+            if (e.response.status === 400) {
+                // this.props.showErrorMessage("Error reviewing the suggestion. Do you have enough rights?");
+            } else {
+                // this.props.showErrorMessage(e.response.status);
+            }
+            /* this.setState({
+                isButtonDisabled: false
+            }); */
         }
     }
 }
