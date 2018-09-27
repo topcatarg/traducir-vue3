@@ -23,7 +23,7 @@ npm run lint
 ```
 To make this project work, you have to branch traducir, and follow the instructions there to make a working backend. 
 
-### Avoiding CORS issues
+## Avoiding CORS issues
 
 You have to add a couple of line in the Configuration method in Traducir. 
 
@@ -55,7 +55,7 @@ https://es.stackoverflow.com/q/189523/324
 or this one:
 https://stackoverflow.com/q/51968782/73749
 
-### Know issues
+## Know issues
 
 This is still a work in progress, so there is a lot of problems around.
 
