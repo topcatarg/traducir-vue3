@@ -19,16 +19,38 @@
             </template>
             <template v-if="GetUser.canManageUsers" slot="adminButtons" slot-scope="data">
                 <b-button-group size="sm">
-                    <b-button variant="link" :href="'/suggestions/' + data.item.id">View suggestions</b-button>
-                    <b-button v-if="data.item.userType === UserType.User" variant="warning">Make trusted user</b-button>
-                    <b-button v-if="data.item.userType === UserType.Banned" variant="warning">Lift Ban</b-button>
-                    <b-button v-if="data.item.userType === UserType.TrustedUser" variant="danger">Make regular user</b-button>
+                    <b-button variant="link" 
+                        :to="'/Suggestions/' + data.item.id">
+                        View suggestions
+                    </b-button>
+                    <b-button 
+                        v-if="data.item.userType === UserType.User" 
+                        variant="warning"
+                        @click="updateUserType(UserType.TrustedUser,data.item.id)">
+                        Make trusted user
+                    </b-button>
+                    <b-button 
+                        v-if="data.item.userType === UserType.Banned" 
+                        variant="warning"
+                        @click="updateUserType(UserType.User,data.item.id)">
+                        Lift Ban
+                    </b-button>
+                    <b-button 
+                        v-if="data.item.userType === UserType.TrustedUser" 
+                        variant="danger"
+                        @click="updateUserType(UserType.User,data.item.id)">
+                        Make regular user
+                    </b-button>
                     <b-button 
                         v-if="data.item.userType !== UserType.Banned 
                             && data.item.userType !== UserType.TrustedUser 
                             && data.item.userType !== UserType.Reviewer 
-                            && !data.item.isModerator" variant="danger">Ban User</b-button>
-                </b-button-group>
+                            && !data.item.isModerator" 
+                        variant="danger"
+                        @click="updateUserType(UserType.Banned)">
+                        Ban User
+                    </b-button>
+                </b-button-group>   
             </template>
         </b-table>
 
@@ -79,6 +101,22 @@ export default class UsersList extends Vue {
             } else {
                 this.props.showErrorMessage(e.response.status);
             } */
+        }
+    }
+
+    private async updateUserType(newType: UserType, userId: number): Promise<void> {
+        try {
+            await Axios.put(process.env.VUE_APP_API_URI + 'users/change-type', {
+                UserId: userId,
+                UserType: newType
+            }, {withCredentials : true});
+            this.refreshUsers();
+        } catch (e) {
+            /* if (e.response.status === 400) {
+                this.props.showErrorMessage("Error updating user type");
+            } else {
+                this.props.showErrorMessage(e.response.status);
+            }*/
         }
     }
 

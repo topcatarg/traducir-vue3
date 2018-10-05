@@ -20,7 +20,7 @@ export default new Router({
       component: Users
     },
     {
-      path: '/Suggestions',
+      path: '/Suggestions/*',
       name: 'Suggestions',
       component: Suggestions
     }
