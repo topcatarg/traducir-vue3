@@ -17,7 +17,7 @@
           <b-nav-item href="https://github.com/g3rv4/Traducir" target="_blank">Main source code</b-nav-item>
           <b-nav-item href="https://github.com/topcatarg/traducir-vue3" target="_blank">This source code</b-nav-item>
           <b-nav-item to="/Users">Users</b-nav-item>
-          <b-nav-item to="/Suggestions">My suggestions</b-nav-item>
+          <b-nav-item :to="'/Suggestions/' + User.id" v-if="this.UserLogedin">My suggestions</b-nav-item>
           <b-nav-item :href="home + 'login?returnUrl=' + location" v-if="!this.UserLogedin">Log in!</b-nav-item>
           <b-nav-item :href="home + 'logout?returnUrl=' + location" v-if="this.UserLogedin">Log out</b-nav-item>
         </b-navbar-nav>
@@ -65,6 +65,9 @@ export default class PersonalHeader extends AppProps {
   }
   get UserType(): string {
     return this.$store.getters.GetUserType;
+  }
+  get User(): IuserInfo {
+    return this.$store.getters.GetUser;
   }
   private Login(): void {
     const returnUrl = encodeURIComponent(location.pathname + location.search);
