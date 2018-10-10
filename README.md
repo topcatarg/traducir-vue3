@@ -64,6 +64,7 @@ This is still a work in progress, so there is a lot of problems around.
 - [ ] When you filter using the button, there is no change in the main filter (partial fixed)
 - [ ] My account should be a menu with 2 options
 - [ ] My account is empty
+- [X] ~~My suggestions (and from others) is empty~~
 - [X] ~~Users is empty~~
 - [ ] Store is a mess (should break it out in parts)
 - [ ] No webworker (I started this before it was implemented on traducir)
