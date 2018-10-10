@@ -16,8 +16,23 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item href="https://github.com/g3rv4/Traducir" target="_blank">Main source code</b-nav-item>
           <b-nav-item href="https://github.com/topcatarg/traducir-vue3" target="_blank">This source code</b-nav-item>
+          <b-nav-item-dropdown text="Database">
+            <b-dropdown-item href="https://db.traducir.win">
+              Access the Database
+            </b-dropdown-item>
+            <b-dropdown-item href="https://github.com/g3rv4/Traducir/blob/master/docs/USING_REDASH.md">
+              Instructions
+            </b-dropdown-item>
+          </b-nav-item-dropdown>
+          <b-nav-item-dropdown text="My account" v-if="this.UserLogedin">
+            <b-dropdown-item :to="'/Suggestions/' + User.id">
+              My Suggestions
+            </b-dropdown-item>
+            <b-dropdown-item to="/Notifications/">
+              My Notifications
+            </b-dropdown-item>
+          </b-nav-item-dropdown>
           <b-nav-item to="/Users">Users</b-nav-item>
-          <b-nav-item :to="'/Suggestions/' + User.id" v-if="this.UserLogedin">My suggestions</b-nav-item>
           <b-nav-item :href="home + 'login?returnUrl=' + location" v-if="!this.UserLogedin">Log in!</b-nav-item>
           <b-nav-item :href="home + 'logout?returnUrl=' + location" v-if="this.UserLogedin">Log out</b-nav-item>
         </b-navbar-nav>
