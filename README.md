@@ -60,7 +60,7 @@ https://stackoverflow.com/q/51968782/73749
 This is still a work in progress, so there is a lot of problems around.
 
 - [ ] Errors are disabled until I find a proper way to show them
-- [X] ~~Main grid is not showing urgent items in red
+- [X] ~~Main grid is not showing urgent items in red~~
 - [ ] When you filter using the button, there is no change in the main filter (partial fixed)
 - [X] ~~My account should be a menu with 2 options~~
 - [X] ~~My account is empty~~
