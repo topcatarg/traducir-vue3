@@ -12,4 +12,5 @@ export default interface ISOString {
     isUrgent: boolean;
     isIgnored: boolean;
     touched?: boolean;
+    _rowVariant?: string;
 }

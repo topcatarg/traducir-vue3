@@ -11,7 +11,7 @@
                     {{data.item.originalString}}
                 </div>
             </template>
-            <template slot="translation" slot-scope="data">
+            <template slot="translation" slot-scope="data" class="danger">
                 <template v-if="data.item.translation!==null">
                     {{data.item.translation}}
                 </template>
@@ -69,7 +69,13 @@ export default class Results extends Vue {
     }
 
     private get SOStrings(): ISOString[] {
-        return this.$store.getters.GetSOStrings;
+        const strings: ISOString[] = this.$store.getters.GetSOStrings;
+        strings.forEach(s => {
+            if (s.isUrgent) {
+                s._rowVariant = 'danger';
+            }
+        });
+        return strings;
     }
 
     private get GetUserLogedin(): boolean {
