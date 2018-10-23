@@ -72,6 +72,7 @@ export default new Vuex.Store({
   actions: {
     me(context) {
       Axios.post<IuserInfo>(process.env.VUE_APP_API_URI + 'me', {}, { withCredentials: true })
+      // Axios.post<IuserInfo>('app/me', {}, { withCredentials: true })
         .then(data => {
           context.commit('SetUser', data.data);
         })
@@ -79,6 +80,7 @@ export default new Vuex.Store({
     },
     config(context) {
       Axios.get<IConfig>(process.env.VUE_APP_API_URI + 'config')
+      // Axios.get<IConfig>('/app/api/config')
         .then(response => context.commit('SetConfig', response.data))
         .catch(error => context.commit('SetConfig', undefined));
     },
