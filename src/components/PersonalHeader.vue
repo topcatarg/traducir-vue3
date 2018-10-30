@@ -43,10 +43,7 @@
 
 
 <script lang="ts">
-// import IConfig from '@/models/Config.ts';
-import IConfig from '@/models/Config';
 import IuserInfo from '@/models/UserInfo';
-import store from '@/store';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -63,26 +60,26 @@ export default class PersonalHeader extends AppProps {
   private location: string = location.href;
   private home?: string = process.env.VUE_APP_BASE_URI;
 
-  public mounted(): void {
-    store.dispatch('me');
-    store.dispatch('config');
-    store.dispatch('stats');
+  public created(): void {
+    this.$store.dispatch('Config/config');
+    this.$store.dispatch('UserData/me');
+    this.$store.dispatch('Stats/stats');
   }
 
   get ConfigFriendlyName(): string {
-    return this.$store.getters.GetConfigfriendlyName;
+    return this.$store.getters['Config/friendlyName'];
   }
   get UserName(): string {
-    return this.$store.getters.GetUserName;
+    return this.$store.getters['UserData/GetUserName'];
   }
   get UserLogedin(): boolean {
-    return this.$store.getters.GetUserLogedin;
+    return this.$store.getters['UserData/GetUserLogedin'];
   }
   get UserType(): string {
-    return this.$store.getters.GetUserType;
+    return this.$store.getters['UserData/GetUserType'];
   }
   get User(): IuserInfo {
-    return this.$store.getters.GetUser;
+    return this.$store.getters['UserData/GetState'];
   }
   private Login(): void {
     const returnUrl = encodeURIComponent(location.pathname + location.search);

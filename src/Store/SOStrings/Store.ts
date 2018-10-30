@@ -1,4 +1,4 @@
-import IConfig from '@/models/Config';
+import ISOString from '@/models/ISOString';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { ActionTree, MutationTree } from 'vuex';
@@ -10,7 +10,7 @@ import { state } from './State';
 
 const namespaced: boolean = true;
 
-export const ConfigStore: Module<IConfig, undefined> = {
+export const UserDataStore: Module<ISOString[], undefined> = {
     namespaced,
     state,
     getters,

@@ -3,7 +3,7 @@ import { MutationTree } from 'vuex';
 import { state } from './State';
 
 export const mutations: MutationTree<IConfig> = {
-    State(s: IConfig, newstate: IConfig) {
-        s = Object.assign({}, newstate);
+    SetConfig(s: IConfig, newstate: IConfig) {
+        Object.assign(s, newstate);
     }
 };

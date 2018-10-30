@@ -1,4 +1,4 @@
-import IConfig from '@/models/Config';
+import IStats from '@/models/Stats';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { ActionTree, MutationTree } from 'vuex';
@@ -10,7 +10,7 @@ import { state } from './State';
 
 const namespaced: boolean = true;
 
-export const ConfigStore: Module<IConfig, undefined> = {
+export const StatsDataStore: Module<IStats, undefined> = {
     namespaced,
     state,
     getters,

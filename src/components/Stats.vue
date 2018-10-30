@@ -29,18 +29,6 @@
                     </b-button>
                 </b-button-group>
             </div>
-            
-<!--             <div className="col d-lg-none">
-                 <div className="btn-group-vertical" role="group" aria-label="Basic example">
-                    <button type="button" className="btn btn-outline-secondary" disabled>{this.props.stats.totalStrings} total strings</button>
-                    {this.props.stats.urgentStrings > 0 &&
-                        <Link to="/filters?urgencyStatus=1" className="btn btn-danger">{this.props.stats.urgentStrings} marked as urgent</Link>
-                    }
-                    <Link to="/filters?translationStatus=2" className="btn btn-outline-danger">{this.props.stats.withoutTranslation} without translation</Link>
-                    <Link to="/filters?suggestionsStatus=3" className="btn btn-outline-primary">{this.props.stats.waitingApproval} suggestions awaiting approval</Link>
-                    <Link to="/filters?suggestionsStatus=4" className="btn btn-outline-success">{this.props.stats.waitingReview} approved suggestions awaiting review</Link>
-                </div>
-            </div>-->
         </div>
 </template>
 
@@ -92,19 +80,19 @@ export default class StatComponent extends Vue {
         };
     }
     get GetStatstotalStrings(): number {
-        return this.$store.getters.GetStatstotalStrings;
+        return this.$store.getters['Stats/GetTotalStrings'];
     }
     get GetStatsurgentStrings(): number {
-        return this.$store.getters.GetStatsurgentStrings;
+        return this.$store.getters['Stats/GetUrgentStrings'];
     }
     get GetStatswaitingApproval(): number {
-        return this.$store.getters.GetStatswaitingApproval;
+        return this.$store.getters['Stats/GetWaitingApproval'];
     }
     get GetStatswithoutTranslation(): number {
-        return this.$store.getters.GetStatswithoutTranslation;
+        return this.$store.getters['Stats/GetWithoutTranslation'];
     }
     get GetStatswaitingReview(): number {
-        return this.$store.getters.GetStatswaitingReview;
+        return this.$store.getters['Stats/GetWaitingReview'];
     }
 }
 </script>

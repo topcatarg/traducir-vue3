@@ -1,3 +1,8 @@
 import IConfig from '@/models/Config';
 
-export const state: IConfig|undefined = undefined;
+export const state: IConfig = {
+    siteDomain: '',
+    friendlyName: '',
+    transifexPath: '',
+    vapidPublic: ''
+};

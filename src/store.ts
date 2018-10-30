@@ -14,31 +14,20 @@ import { UserType, userTypeToString } from './models/UserType';
 Vue.use(Vuex);
 
 export interface State {
-  Config?: IConfig | undefined;
-  userData?: IuserInfo;
-  stats?: IStats;
-  QueryViewModel: QueryViewModel;
+  // Config?: IConfig | undefined;
+  // userData?: IuserInfo;
+  // stats?: IStats;
   HasError: boolean;
-  SOStrings: ISOString[];
+  // SOStrings: ISOString[];
   StringToEdit?: ISOString;
 }
 
 export const OriginalState: State = {
-  Config: undefined,
-  userData: undefined,
-  stats: undefined,
-  QueryViewModel: {
-    SourceRegex: '',
-    TranslationRegex: '',
-    Key: '',
-    TranslationStatus: 0,
-    SuggestionsStatus: 0,
-    PushStatus: 0,
-    UrgencyStatus: 0,
-    IgnoredStatus: 0
-  },
+  // Config: undefined,
+  // userData: undefined,
+  // stats: undefined,
   HasError: false,
-  SOStrings: [],
+  // SOStrings: [],
   StringToEdit: undefined
 };
 
@@ -48,15 +37,9 @@ export default new Vuex.Store({
     SetUser(state, newstate: IuserInfo) {
       state.userData = newstate;
     },
-    SetConfig(state, newstate: IConfig) {
-      state.Config = newstate;
-    },
     SetStats(state, newstate: IStats) {
       state.stats = Object.assign({}, newstate);
       // state.stats = newstate;
-    },
-    SetQueryViewModel(state, newstate: QueryViewModel) {
-      state.QueryViewModel = Object.assign({}, state.QueryViewModel, newstate);
     },
     SetSOStrings(state, newstate: ISOString[]) {
       // state.SOStrings = Object.assign({}, newstate);
@@ -92,7 +75,7 @@ export default new Vuex.Store({
     SetQueryViewModel(context, param: QueryViewModel) {
       context.commit('SetQueryViewModel', param);
       Axios.post<ISOString[]>(process.env.VUE_APP_API_URI + 'strings/query',
-        context.state.QueryViewModel, { withCredentials: true })
+        param, { withCredentials: true })
         .then(response => {
           context.commit('SetSOStrings', response.data);
           context.commit('SetHasError', false);
@@ -192,9 +175,6 @@ export default new Vuex.Store({
       return state.stats !== undefined ?
         state.stats.waitingReview :
         0;
-    },
-    GetQueryViewModel: state => {
-      return state.QueryViewModel;
     },
     GetHasResults: state => {
       return state.SOStrings.length > 0;

@@ -3,6 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { ActionTree, MutationTree } from 'vuex';
 import { Module } from 'vuex';
+import { actions } from './Actions';
 import { getters } from './Getters';
 import { mutations } from './Mutations';
 import { state } from './State';
@@ -13,5 +14,6 @@ export const QueryViewModelStore: Module<QueryViewModel, undefined> = {
     namespaced,
     state,
     getters,
-    mutations
+    mutations,
+    actions
 };

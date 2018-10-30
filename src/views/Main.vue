@@ -34,8 +34,6 @@ import EditString from '@/components/EditString.vue';
 import Filters from '@/components/Filters.vue';
 import Results from '@/components/Results.vue';
 import StatComponent from '@/components/Stats.vue';
-
-import store from '@/store';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
