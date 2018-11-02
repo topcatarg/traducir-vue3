@@ -32,7 +32,7 @@ export const getters: GetterTree<QueryViewModel, undefined> = {
     IgnoredStatus(): IgnoredStatus {
         return state.IgnoredStatus;
     },
-    GetState(): QueryViewModel {
+    State(): QueryViewModel {
         return state;
     }
 };

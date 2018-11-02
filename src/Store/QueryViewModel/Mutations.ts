@@ -31,5 +31,8 @@ export const mutations: MutationTree<QueryViewModel> = {
     },
     IgnoredStatus(s: QueryViewModel, newstate: IgnoredStatus) {
         s.IgnoredStatus = newstate;
+    },
+    State(s: QueryViewModel, newstate: QueryViewModel) {
+        Object.assign(s, newstate);
     }
 };

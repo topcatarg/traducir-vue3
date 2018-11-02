@@ -12,7 +12,7 @@
                             class="mb-3 mt-2" 
                             type="text"
                             placeholder="^question"
-                            v-model="FiltersViewModel.SourceRegEx"
+                            v-model="SourceRegex"
                         />
                     </b-col>
                     <b-col > 
@@ -21,7 +21,7 @@
                             class="mb-3 mt-2"
                             type="text"
                             placeholder="(?i)pregunta$"
-                            v-model="FiltersViewModel.TranslationRegex"
+                            v-model="TranslationRegex"
                         />
                     </b-col>
                 </b-row >
@@ -30,7 +30,7 @@
                         Strings without translation
                         <b-form-select 
                             class="mb-3 mt-2"
-                            v-model="FiltersViewModel.TranslationStatus" 
+                            v-model="TranslationStatus" 
                             :options="TranslationStatusOptions">
                         </b-form-select>
                     </b-col>
@@ -38,7 +38,7 @@
                         Strings with pending suggestions
                         <b-form-select 
                             class="mb-3 mt-2"
-                            v-model="FiltersViewModel.SuggestionsStatus"
+                            v-model="SuggestionsStatus"
                             :options="SuggestionsStatusOptions"
                             />
                     </b-col>
@@ -49,14 +49,14 @@
                         <b-form-input 
                             class="mb-3 mt-2"
                             type="text"
-                            v-model="FiltersViewModel.Key"
+                            v-model="Key"
                         />
                     </b-col>
                     <b-col>
                         Strings with urgency status
                         <b-form-select 
                             class="mb-3 mt-2"
-                            v-model="FiltersViewModel.UrgencyStatus"
+                            v-model="UrgencyStatus"
                             :options="UrgencyStatusOptions"/>
                     </b-col>
                 </b-row>
@@ -119,44 +119,54 @@ export default class Filters extends Vue {
             });
         }
         this.FiltersViewModel = Object.assign({}, this.QueryViewModel);
-        // this.FiltersViewModel.TranslationStatus = this.QueryViewModel.TranslationStatus;
-        // this.FiltersViewModel.SuggestionsStatus = this.QueryViewModel.SuggestionsStatus;
-        // this.FiltersViewModel.UrgencyStatus = this.QueryViewModel.UrgencyStatus;
     }
 
     private GetData(): void {
-        /* const v: QueryViewModel = {
-            SourceRegex: this.SourceRegEx,
-            TranslationRegex: this.TranslationRegex,
-            Key: this.Key,
-            TranslationStatus: TranslationStatus['Any String'], // this.TranslationStatusValue,
-            SuggestionsStatus: SuggestionsStatus['Any string'], // this.SuggestionsStatusValue,
-            UrgencyStatus: UrgencyStatus['Any string'], // this.UrgencyStatusValue,
-            PushStatus: 0,
-            IgnoredStatus: 0
-        };*/
-        this.$store.dispatch('SetQueryViewModel', this.FiltersViewModel);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.QueryViewModel);
     }
 
-    private get TranslationStatusValue(): TranslationStatus {
-        return this.QueryViewModel.TranslationStatus;
+    private get SourceRegex(): string {
+        return this.$store.getters['QueryViewModel/SourceRegex'];
     }
-
-    private get SuggestionsStatusValue(): SuggestionsStatus {
-        return this.QueryViewModel.SuggestionsStatus;
+    private set SourceRegex(s: string) {
+        this.$store.commit('QueryViewModel/SourceRegex', s);
     }
-
-    private get UrgencyStatusValue(): UrgencyStatus {
-        return this.QueryViewModel.UrgencyStatus;
+    private get TranslationRegex(): string {
+        return this.$store.getters['QueryViewModel/TranslationRegex'];
     }
-
+    private set TranslationRegex(s: string) {
+        this.$store.commit('QueryViewModel/TranslationRegex', s);
+    }
+    private get Key(): string {
+        return this.$store.getters['QueryViewModel/Key'];
+    }
+    private set Key(s: string) {
+        this.$store.commit('QueryViewModel/Key', s);
+    }
+    private get TranslationStatus(): TranslationStatus {
+        return this.$store.getters['QueryViewModel/TranslationStatus'];
+    }
+    private set TranslationStatus(s: TranslationStatus) {
+        this.$store.commit('QueryViewModel/TranslationStatus', s);
+    }
+    private get SuggestionsStatus(): SuggestionsStatus {
+        return this.$store.getters['QueryViewModel/SuggestionsStatus'];
+    }
+    private set SuggestionsStatus(s: SuggestionsStatus) {
+        this.$store.commit('QueryViewModel/SuggestionsStatus', s);
+    }
+    private get UrgencyStatus(): UrgencyStatus {
+        return this.$store.getters['QueryViewModel/UrgencyStatus'];
+    }
+    private set UrgencyStatus(s: UrgencyStatus) {
+        this.$store.commit('QueryViewModel/UrgencyStatus', s);
+    }
     private get QueryViewModel(): QueryViewModel {
-        return this.$store.getters.GetQueryViewModel;
+        return this.$store.getters['QueryViewModel/State'];
     }
 
     private ResetForm() {
-        this.FiltersViewModel = Object.assign({}, this.QueryViewModel);
-        this.$store.commit('SetSOStrings', []);
+        this.$store.dispatch('QueryViewModel/reset');
     }
 }
 </script>

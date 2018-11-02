@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { ConfigStore} from './Config/Store';
 import { QueryViewModelStore } from './QueryViewModel/Store';
+import { SOStringsStore } from './SOStrings/Store';
 import { StatsDataStore } from './Stats/Store';
 import { UserDataStore } from './UserData/Store';
 
@@ -12,7 +13,8 @@ const store: StoreOptions<undefined> = {
         QueryViewModel: QueryViewModelStore,
         Config: ConfigStore,
         UserData: UserDataStore,
-        Stats: StatsDataStore
+        Stats: StatsDataStore,
+        SOStrings: SOStringsStore
     }
 };
 

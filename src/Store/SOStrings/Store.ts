@@ -10,7 +10,7 @@ import { state } from './State';
 
 const namespaced: boolean = true;
 
-export const UserDataStore: Module<ISOString[], undefined> = {
+export const SOStringsStore: Module<ISOString[], undefined> = {
     namespaced,
     state,
     getters,
