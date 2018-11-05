@@ -43,7 +43,6 @@
 <script lang="ts">
 import ITableFields from '@/Helpers/Tables/ITableFields';
 import ISOString from '@/models/ISOString';
-import store from '@/store';
 import * as _ from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import ISOStringSuggestion, { StringSuggestionState } from '../models/ISOStringSuggestion';
@@ -69,7 +68,7 @@ export default class Results extends Vue {
     }
 
     private get SOStrings(): ISOString[] {
-        const strings: ISOString[] = this.$store.getters.GetSOStrings;
+        const strings: ISOString[] = this.$store.getters['SOStrings/State'];
         strings.forEach(s => {
             if (s.isUrgent) {
                 s._rowVariant = 'danger';

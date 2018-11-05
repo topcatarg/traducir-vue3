@@ -1,3 +1,11 @@
 import ISOString from '@/models/ISOString';
 
-export const state: ISOString[] = [];
+export interface IState {
+    ISOString: ISOString[];
+    HasData: boolean;
+}
+
+export const state: IState = {
+    ISOString: [],
+    HasData: false
+};

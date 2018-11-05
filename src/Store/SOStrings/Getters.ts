@@ -1,12 +1,12 @@
 import ISOString from '@/models/ISOString';
 import { GetterTree } from 'vuex';
-import { state } from './State';
+import { IState, state } from './State';
 
-export const getters: GetterTree<ISOString[], undefined> = {
-    GetState(): ISOString[] {
-        return state;
+export const getters: GetterTree<IState, undefined> = {
+    State(): ISOString[] {
+        return state.ISOString;
     },
-    GetHasResults(): boolean {
-        return state.length > 0;
+    HasResults(): boolean {
+        return state.HasData;
     }
 };

@@ -26,7 +26,6 @@
           v-if="!this.searching"
           @back-editing="onEditingBack"/>
       </transition>
-    
   </div>
 </template>
 <script lang="ts">
@@ -49,7 +48,7 @@ export default class Main extends Vue {
   private searching: boolean = true;
 
   private get WithResults(): boolean {
-    return this.$store.getters.GetHasResults;
+    return this.$store.getters['SOStrings/HasResults'];
   }
 
   private onRowPress(): void {

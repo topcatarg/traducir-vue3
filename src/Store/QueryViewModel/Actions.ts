@@ -18,7 +18,8 @@ export const actions: ActionTree<QueryViewModel, undefined> = {
             PushStatus: PushStatus.AnyStatus,
             UrgencyStatus: UrgencyStatus['Any string'],
             IgnoredStatus: IgnoredStatus.AvoidIgnored
-        }
+        };
         context.commit('State', v);
+        context.commit('SOStrings/Reset', {} , {root : true});
     }
 };

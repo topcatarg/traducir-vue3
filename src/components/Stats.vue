@@ -36,49 +36,33 @@
 import { SuggestionsStatus } from '@/Helpers/Enums/SuggestionsStatus';
 import { TranslationStatus } from '@/Helpers/Enums/TranslationStatus';
 import { UrgencyStatus } from '@/Helpers/Enums/UrgencyStatus';
-import store from '@/store';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import QueryViewModel from '../models/QueryViewModel';
 
 @Component
 export default class StatComponent extends Vue {
 
     private ClickedUrgentStrings(): void {
-        const v = this.GetEmptyModel();
-        v.UrgencyStatus = UrgencyStatus['Is urgent'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/UrgencyStatus', UrgencyStatus['Is urgent']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
     private ClickedWithoutTranslation(): void {
-        const v = this.GetEmptyModel();
-        v.TranslationStatus = TranslationStatus['Only strings without translation'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/TranslationStatus', TranslationStatus['Only strings without translation']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
     private ClickedAwaitingAproval(): void {
-        const v = this.GetEmptyModel();
-        v.SuggestionsStatus = SuggestionsStatus['Strings with suggestions awaiting approval'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/SuggestionsStatus',
+            SuggestionsStatus['Strings with suggestions awaiting approval']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
     private ClickedAwaitingReview(): void {
-        const v = this.GetEmptyModel();
-        v.SuggestionsStatus = SuggestionsStatus['Strings with approved suggestions awaiting review'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/SuggestionsStatus',
+            SuggestionsStatus['Strings with approved suggestions awaiting review']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
-    private GetEmptyModel(): QueryViewModel {
-        return {
-            SourceRegex: '',
-            TranslationRegex: '',
-            Key: '',
-            TranslationStatus: TranslationStatus['Any String'],
-            SuggestionsStatus: SuggestionsStatus['Any string'],
-            UrgencyStatus: UrgencyStatus['Any string'],
-            PushStatus: 0,
-            IgnoredStatus: 0
-        };
-    }
     get GetStatstotalStrings(): number {
         return this.$store.getters['Stats/GetTotalStrings'];
     }

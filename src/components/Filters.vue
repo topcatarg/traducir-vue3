@@ -74,7 +74,6 @@
 
 <script lang="ts">
 import { PushStatus } from '@/Helpers/Enums/PushStatus';
-import store from '@/store';
 import * as _ from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { SuggestionsStatus } from '../Helpers/Enums/SuggestionsStatus';
@@ -88,7 +87,6 @@ export default class Filters extends Vue {
     private TranslationStatusOptions: object[] = [];
     private SuggestionsStatusOptions: object[] = [];
     private UrgencyStatusOptions: object[] = [];
-    private FiltersViewModel: QueryViewModel;
 
     private submitForm: (() => void) & _.Cancelable = _.debounce(
         this.GetData,
@@ -118,7 +116,6 @@ export default class Filters extends Vue {
             text: UrgencyStatus[index]
             });
         }
-        this.FiltersViewModel = Object.assign({}, this.QueryViewModel);
     }
 
     private GetData(): void {
