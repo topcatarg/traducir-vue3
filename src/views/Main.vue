@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{this.WithResults}}
       <transition name="custom-results-transition"
         enter-active-class="animated fadeInLeft"
         leave-active-class="animated bounceOutLeft">
@@ -26,7 +27,6 @@
           v-if="!this.searching"
           @back-editing="onEditingBack"/>
       </transition>
-    
   </div>
 </template>
 <script lang="ts">
@@ -34,8 +34,6 @@ import EditString from '@/components/EditString.vue';
 import Filters from '@/components/Filters.vue';
 import Results from '@/components/Results.vue';
 import StatComponent from '@/components/Stats.vue';
-
-import store from '@/store';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
@@ -51,7 +49,7 @@ export default class Main extends Vue {
   private searching: boolean = true;
 
   private get WithResults(): boolean {
-    return this.$store.getters.GetHasResults;
+    return this.$store.getters['SOStrings/HasResults'];
   }
 
   private onRowPress(): void {

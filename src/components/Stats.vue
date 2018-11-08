@@ -29,18 +29,6 @@
                     </b-button>
                 </b-button-group>
             </div>
-            
-<!--             <div className="col d-lg-none">
-                 <div className="btn-group-vertical" role="group" aria-label="Basic example">
-                    <button type="button" className="btn btn-outline-secondary" disabled>{this.props.stats.totalStrings} total strings</button>
-                    {this.props.stats.urgentStrings > 0 &&
-                        <Link to="/filters?urgencyStatus=1" className="btn btn-danger">{this.props.stats.urgentStrings} marked as urgent</Link>
-                    }
-                    <Link to="/filters?translationStatus=2" className="btn btn-outline-danger">{this.props.stats.withoutTranslation} without translation</Link>
-                    <Link to="/filters?suggestionsStatus=3" className="btn btn-outline-primary">{this.props.stats.waitingApproval} suggestions awaiting approval</Link>
-                    <Link to="/filters?suggestionsStatus=4" className="btn btn-outline-success">{this.props.stats.waitingReview} approved suggestions awaiting review</Link>
-                </div>
-            </div>-->
         </div>
 </template>
 
@@ -48,63 +36,47 @@
 import { SuggestionsStatus } from '@/Helpers/Enums/SuggestionsStatus';
 import { TranslationStatus } from '@/Helpers/Enums/TranslationStatus';
 import { UrgencyStatus } from '@/Helpers/Enums/UrgencyStatus';
-import store from '@/store';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import QueryViewModel from '../models/QueryViewModel';
 
 @Component
 export default class StatComponent extends Vue {
 
     private ClickedUrgentStrings(): void {
-        const v = this.GetEmptyModel();
-        v.UrgencyStatus = UrgencyStatus['Is urgent'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/UrgencyStatus', UrgencyStatus['Is urgent']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
     private ClickedWithoutTranslation(): void {
-        const v = this.GetEmptyModel();
-        v.TranslationStatus = TranslationStatus['Only strings without translation'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/TranslationStatus', TranslationStatus['Only strings without translation']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
     private ClickedAwaitingAproval(): void {
-        const v = this.GetEmptyModel();
-        v.SuggestionsStatus = SuggestionsStatus['Strings with suggestions awaiting approval'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/SuggestionsStatus',
+            SuggestionsStatus['Strings with suggestions awaiting approval']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
     private ClickedAwaitingReview(): void {
-        const v = this.GetEmptyModel();
-        v.SuggestionsStatus = SuggestionsStatus['Strings with approved suggestions awaiting review'];
-        this.$store.dispatch('SetQueryViewModel', v);
+        this.$store.commit('QueryViewModel/SuggestionsStatus',
+            SuggestionsStatus['Strings with approved suggestions awaiting review']);
+        this.$store.dispatch('SOStrings/FillSOStrings', this.$store.getters['QueryViewModel/State']);
     }
 
-    private GetEmptyModel(): QueryViewModel {
-        return {
-            SourceRegex: '',
-            TranslationRegex: '',
-            Key: '',
-            TranslationStatus: TranslationStatus['Any String'],
-            SuggestionsStatus: SuggestionsStatus['Any string'],
-            UrgencyStatus: UrgencyStatus['Any string'],
-            PushStatus: 0,
-            IgnoredStatus: 0
-        };
-    }
     get GetStatstotalStrings(): number {
-        return this.$store.getters.GetStatstotalStrings;
+        return this.$store.getters['Stats/GetTotalStrings'];
     }
     get GetStatsurgentStrings(): number {
-        return this.$store.getters.GetStatsurgentStrings;
+        return this.$store.getters['Stats/GetUrgentStrings'];
     }
     get GetStatswaitingApproval(): number {
-        return this.$store.getters.GetStatswaitingApproval;
+        return this.$store.getters['Stats/GetWaitingApproval'];
     }
     get GetStatswithoutTranslation(): number {
-        return this.$store.getters.GetStatswithoutTranslation;
+        return this.$store.getters['Stats/GetWithoutTranslation'];
     }
     get GetStatswaitingReview(): number {
-        return this.$store.getters.GetStatswaitingReview;
+        return this.$store.getters['Stats/GetWaitingReview'];
     }
 }
 </script>

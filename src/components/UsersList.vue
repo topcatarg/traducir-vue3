@@ -121,11 +121,11 @@ export default class UsersList extends Vue {
     }
 
     get GetConfig(): IConfig {
-        return this.$store.getters.GetConfig;
+        return this.$store.getters['Config/GetState'];
     }
 
     get GetUser(): IUserInfo {
-        return this.$store.getters.GetUser;
+        return this.$store.getters['UserData/GetState'];
     }
 
     private UserType(uT: UserType): string {
