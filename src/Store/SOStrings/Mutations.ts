@@ -10,5 +10,12 @@ export const mutations: MutationTree<IState> = {
     Reset(s: IState, newstate: ISOString[]) {
         s.ISOString = [];
         s.HasData = s.ISOString.length > 0;
+    },
+    StringToEdit(s: IState, newstate: ISOString) {
+        if (s.StringToEdit === undefined) {
+            s.StringToEdit = Object.assign({}, newstate);
+        } else {
+            s.StringToEdit = Object.assign(s.StringToEdit, newstate);
+        }
     }
 };

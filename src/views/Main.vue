@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{this.WithResults}}
       <transition name="custom-results-transition"
         enter-active-class="animated fadeInLeft"
         leave-active-class="animated bounceOutLeft">

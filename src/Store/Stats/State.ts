@@ -6,4 +6,4 @@ export const state: IStats = {
     withoutTranslation: 0,
     waitingApproval: 0,
     waitingReview: 0
-}
+};

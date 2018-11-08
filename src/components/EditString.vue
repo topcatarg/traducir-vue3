@@ -56,23 +56,27 @@
                 Copy as suggestion
             </b-button>
         </div>
-        <hr>
-        <b-table :items="this.GetStringToEdit.suggestions" :fields="fields" 
-            class="mx-auto mytableediting">
-            <template slot="delete" slot-scope="data">
-                <b-button variant="danger" size="sm" v-if="GetUser.id === data.item.createdById" @click="DeleteReview(data.item.id)">
-                    DELETE
-                </b-button>
-            </template>
-            <template slot="votes" slot-scope="data">
-                <b-button variant="success" @click="processReview(true,data.item.id)">
-                    <i class="fa fa-thumbs-up"></i>
-                </b-button>
-                <b-button variant="danger"  @click="processReview(false,data.item.id)">
-                    <i class="fa fa-thumbs-down"></i>
-                </b-button>
-            </template>
-        </b-table>
+        <div v-if="this.GetStringToEdit.suggestions !== null">
+            <b-table :items="this.GetStringToEdit.suggestions" :fields="fields" 
+                class="mx-auto mytableediting mt-4">
+                <template slot="delete" slot-scope="data">
+                    <b-button variant="danger" size="sm" v-if="GetUser.id === data.item.createdById" @click="DeleteReview(data.item.id)">
+                        DELETE
+                    </b-button>
+                </template>
+                <template slot="votes" slot-scope="data">
+                    <b-button variant="success" @click="processReview(true,data.item.id)">
+                        <i class="fa fa-thumbs-up"></i>
+                    </b-button>
+                    <b-button variant="danger"  @click="processReview(false,data.item.id)">
+                        <i class="fa fa-thumbs-down"></i>
+                    </b-button>
+                </template>
+            </b-table>
+        </div>
+        <div v-else>
+            <hr>
+        </div>
         <div class="text-left font-weight-bold">
             New Suggestion
             <b-form-textarea id="textarea1"
@@ -97,6 +101,9 @@
 </template>
 
 <script lang="ts">
+import PDeleteReview from '@/Helpers/Params/DeleteReview';
+import PProcessReview from '@/Helpers/Params/ProcessReview';
+import PSetUrgency from '@/Helpers/Params/SetUrgency';
 import ITableFields from '@/Helpers/Tables/ITableFields';
 import IConfig from '@/models/Config';
 import ISOStringToTranslate from '@/models/ISOStringToTranslate';
@@ -140,76 +147,46 @@ export default class EditString extends Vue {
     }
 
     private get GetStringToEdit(): ISOStringToTranslate {
-        return this.$store.getters.GetStringToEdit;
+        return this.$store.getters['SOStrings/StringToEdit'];
     }
 
     private get GetConfig(): IConfig {
-        return this.$store.getters.GetConfig;
+        return this.$store.getters['Config/GetState'];
     }
 
     private get GetUser(): IuserInfo {
-        return this.$store.getters.GetUser;
+        return this.$store.getters['UserData/GetState'];
     }
 
     private async MarkUrgent(): Promise<void> {
-        try {
-            await Axios.put(process.env.VUE_APP_API_URI + 'manage-urgency', {
-                IsUrgent: !this.GetStringToEdit.isUrgent,
-                StringId: this.GetStringToEdit.id
-            }, { withCredentials: true });
-            this.$store.dispatch('RefreshString', this.GetStringToEdit.id);
-            /*if (this.props.str) {
-                this.props.refreshString(this.props.str.id);
-            }*/
-        } catch (e) {
-            /* if (e.response.status === 400) {
-                this.props.showErrorMessage("Failed updating the urgency... maybe a race condition?");
-            } else {
-                this.props.showErrorMessage(e.response.status);
-            }*/
-        }
+        const p: PSetUrgency  = {
+            IsUrgent: !this.GetStringToEdit.isUrgent,
+            StringId: this.GetStringToEdit.id
+        };
+        await this.$store.dispatch('SOStrings/SetUrgency', p);
     }
 
-    private SendTranslation(approve: boolean): void {
+    private async SendTranslation(approve: boolean): Promise<void> {
         this.VM.Approve = approve;
-        this.$store.dispatch('postSuggestion', this.VM);
+        await this.$store.dispatch('SOStrings/postSuggestion', this.VM);
         this.$emit('back-editing');
     }
 
     private async DeleteReview(id: number): Promise<void> {
-        try {
-            await Axios.delete(process.env.VUE_APP_API_URI + 'suggestions/' + id, {withCredentials: true});
-            this.$store.dispatch('RefreshString', this.GetStringToEdit.id);
-        } catch (e) {
-            if (e.response.status === 400) {
-                //  this.props.showErrorMessage("Error deleting the suggestion. Do you have enough rights?");
-            } else {
-                // this.props.showErrorMessage(e.response.status);
-            }
-        }
+        const p: PDeleteReview = {
+            SuggestionId: id,
+            StringId: this.GetStringToEdit.id
+        };
+        await this.$store.dispatch('SOStrings/DeleteReview', p);
     }
 
     private async processReview(action: boolean, id: number): Promise<void> {
-        /* this.setState({
-            isButtonDisabled: true
-        });*/
-        try {
-            await Axios.put(process.env.VUE_APP_API_URI + 'review', {
-                Approve: action,
-                SuggestionId: id
-            }, {withCredentials: true});
-            this.$store.dispatch('RefreshString', this.GetStringToEdit.id);
-            // history.push("/filters");
-        } catch (e) {
-            if (e.response.status === 400) {
-                // this.props.showErrorMessage("Error reviewing the suggestion. Do you have enough rights?");
-            } else {
-                // this.props.showErrorMessage(e.response.status);
-            }
-            /* this.setState({
-                isButtonDisabled: false
-            }); */
-        }
+        const p: PProcessReview = {
+            action,
+            SuggestionId : id,
+            StringId: this.GetStringToEdit.id
+        };
+        await this.$store.dispatch('SOStrings/processReview', p);
     }
 }
 </script>

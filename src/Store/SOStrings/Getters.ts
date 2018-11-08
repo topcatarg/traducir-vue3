@@ -8,5 +8,8 @@ export const getters: GetterTree<IState, undefined> = {
     },
     HasResults(): boolean {
         return state.HasData;
+    },
+    StringToEdit(): ISOString|undefined {
+        return state.StringToEdit;
     }
 };

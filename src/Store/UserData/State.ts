@@ -8,4 +8,4 @@ export const state: IuserInfo = {
     canReview : false,
     canManageUsers : false,
     id : 0
-}
+};
