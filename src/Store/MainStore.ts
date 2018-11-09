@@ -1,3 +1,4 @@
+import { NotificationStore } from '@/Store/Notifications/Store';
 import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import { ConfigStore} from './Config/Store';
@@ -14,7 +15,8 @@ const store: StoreOptions<undefined> = {
         Config: ConfigStore,
         UserData: UserDataStore,
         Stats: StatsDataStore,
-        SOStrings: SOStringsStore
+        SOStrings: SOStringsStore,
+        Notifications: NotificationStore
     }
 };
 
