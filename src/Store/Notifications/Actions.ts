@@ -10,6 +10,7 @@ export const actions: ActionTree<INotificationSettings, undefined> = {
             {withCredentials: true});
             context.commit('SetNotifications', n);
         } catch (e) {
+            console.log("error");
             /*if (e.response.status === 401) {
                 history.push("/");
             } else {
